@@ -4,7 +4,6 @@ import 'react-notion-x/src/styles.css'
 import 'prismjs/themes/prism-tomorrow.css'
 import 'mac-scrollbar/dist/mac-scrollbar.css'
 import 'highlight.js/styles/vs.css'
-import { GlobalScrollbar } from 'mac-scrollbar'
 import { isMobile } from 'react-device-detect'
 import styled from '@emotion/styled'
 import { Box } from '@chakra-ui/react'
@@ -21,6 +20,14 @@ import { DEBUG } from 'utils/index'
 import NonSSRWrapper from 'components/NonSSRWrapper'
 import { PROJECT_NAME } from 'constants/index'
 import 'utils/translation'
+
+// Client-side only scrollbar component
+const ClientOnlyScrollbar = () => {
+  if (typeof window === 'undefined') return null
+
+  const { GlobalScrollbar } = require('mac-scrollbar')
+  return !isMobile ? <GlobalScrollbar skin="dark" /> : null
+}
 
 const Overlay = styled(Box)`
   opacity: 1;
@@ -93,7 +100,7 @@ const App = ({
   return (
     <>
       <Head metadata={pageProps.pageMeta} />
-      {!isMobile && <GlobalScrollbar skin="dark" />}
+      <ClientOnlyScrollbar />
       <ThemeProvider>
         <NonSSRWrapper>
           <WagmiConfig config={wagmiConfig}>
